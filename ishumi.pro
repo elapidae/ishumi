@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -20,6 +20,7 @@ SOURCES += \
     form_crypto_pri.cpp \
     ii_aes_ecb.cpp \
     ii_casts.cpp \
+    ii_messages.cpp \
     ii_secblock.cpp \
     ii_sha3_256.cpp \
     ii_x25519.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     form_crypto_pri.h \
     ii_aes_ecb.h \
     ii_casts.h \
+    ii_messages.h \
     ii_secblock.h \
     ii_sha3_256.h \
     ii_x25519.h \

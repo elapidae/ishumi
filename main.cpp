@@ -38,20 +38,20 @@ using namespace CryptoPP;
 #include "vlog.h"
 #include "vbyte_buffer.h"
 
-int main(int argc, char* argv[])
-{
-    SecByteBlock key( ii_aes_ecb::block_size );
-    key.Assign( (u_char*)"0123456789abcdef", 16 );
+//int main(int argc, char* argv[])
+//{
+//    SecByteBlock key( ii_aes_ecb::block_size );
+//    key.Assign( (u_char*)"0123456789abcdef", 16 );
 
-    ii_aes_ecb e( key );
-    auto ch = e.encode("0123456789abcdef");
-    vdeb << vbyte_buffer(ch).to_hex();
-    vdeb << e.encode(ch).size();
-    vdeb << e.decode(ch);
-    return 0;
-}
+//    ii_aes_ecb e( key );
+//    auto ch = e.encode("0123456789abcdef");
+//    vdeb << vbyte_buffer(ch).to_hex();
+//    vdeb << e.encode(ch).size();
+//    vdeb << e.decode(ch);
+//    return 0;
+//}
 
-/*
+
 #include "mainwindow.h"
 
 
@@ -82,28 +82,26 @@ int main(int argc, char* argv[])
 #include "ii_sha3_256.h"
 #include "ii_aes_ecb.h"
 
+#include "ii_messages.h"
 
 using namespace CryptoPP;
 
 
-int main( int argc, char* argv[] )
+//int main( int argc, char* argv[] )
+int main()
 {
-    AutoSeededRandomPool rndA, rndB;
-    SecByteBlock key( ii_aes_ecb::block_size );
-    key.Assign( (uchar*)"0123456789abcdef", 16 );
+    ii::Msg_Ping_2 ping{ 98765 };
 
-    ii_aes_ecb e( key );
-    auto ch = e.encode("0123456789abcdef");
-    ch = e.encode("0123456789abcdef");
-    auto ch2 = e.encode(ch);
-    vdeb << vbyte_buffer(ch).to_hex();
-    vdeb << e.decode(ch2);
-    vdeb << e.encode(ch).size();
+    ii::GeneralBody_1 body;
+    body.encode( ping );
 
-    return 0;
 
-//    AutoSeededRandomPool rndA, rndB;
-    x25519 ecdhA(rndA), ecdhB(rndB);
+    ii::GeneralMessage_0 msg;
+    msg.sid = 12354596756;
+
+
+    AutoSeededRandomPool rndA, rndB, rndC;
+    x25519 ecdhA(rndA), ecdhB(rndB), ecdhC(rndC);
 
     std::string rr;
     StringSink sink( rr );
@@ -121,6 +119,9 @@ int main( int argc, char* argv[] )
     SecByteBlock privB( ecdhB.PrivateKeyLength() );
     SecByteBlock pubB( ecdhB.PublicKeyLength() );
     ecdhB.GenerateKeyPair( rndB, privB, pubB );
+
+    SecByteBlock pubC( ecdhB.PublicKeyLength() );
+    ecdhC.GeneratePublicKey( rndC, privB, pubC );
 
     //////////////////////////////////////////////////////////////
 
@@ -150,6 +151,14 @@ int main( int argc, char* argv[] )
 
     std::cout << "Shared secret (B): ";
     StringSource(sharedB, sharedB.size(), true, new Redirector(encoder));
+    std::cout << std::endl;
+
+    std::cout << "Pub (B): ";
+    StringSource(pubB, pubB.size(), true, new Redirector(encoder));
+    std::cout << std::endl;
+
+    std::cout << "Pub (C): ";
+    StringSource(pubC, pubC.size(), true, new Redirector(encoder));
     std::cout << std::endl;
 
     return 0;

@@ -7,7 +7,7 @@ static thread_local CryptoPP::AutoSeededRandomPool rng;
 
 static std::string rand_str( size_t size )
 {
-    assert(size <= 8);
+    assert(size <= 16);
     char buf[8];
     auto b2 = static_cast<CryptoPP::byte*>( static_cast<void*>(buf) );
     rng.GenerateBlock( b2, size );
@@ -20,7 +20,7 @@ static std::string rand_str( size_t size )
 Head_Nonce::Head_Nonce()
     : data( rand_str(8) )
 {
-    uint8_t real_size = 1 + (data[0] & 0x07);
+    uint8_t real_size = 1 + (data[0] & 0x0F);
     data.resize( real_size );
 }
 
